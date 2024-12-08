@@ -1,0 +1,231 @@
+--Customer Insights
+--1. Percentage of Orders from Adults vs. Teenagers
+
+SELECT 
+    Age_Group, 
+    COUNT(*) AS Total_Orders,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM vrinda_store)), 2) AS Percentage_Orders
+FROM vrinda_store
+GROUP BY Age_Group
+ORDER BY Total_Orders DESC;
+
+--2. Gender-wise Order Analysis
+
+SELECT 
+    Gender, 
+    COUNT(*) AS Total_Orders,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM vrinda_store)), 2) AS Percentage_Orders
+FROM vrinda_store
+GROUP BY Gender
+ORDER BY Total_Orders DESC;
+
+--3. Orders by Location (City and State)
+
+SELECT 
+    Ship_City, 
+    Ship_State,
+    COUNT(*) AS Total_Orders
+FROM vrinda_store
+GROUP BY Ship_City, Ship_State
+ORDER BY Total_Orders DESC;
+
+--Sales Performance
+--1. What is the total revenue and average order value?
+
+SELECT 
+    SUM(Amount) AS Total_Revenue, 
+    ROUND(AVG(Amount), 2) AS Average_Order_Value
+FROM vrinda_store;
+
+--2. Measure sales performance across categories, channels, or customer segments.
+
+--a. Revenue by Category
+
+SELECT 
+    Category, 
+    SUM(Amount) AS Total_Revenue,
+    COUNT(*) AS Total_Orders,
+    ROUND(AVG(Amount), 2) AS Average_Order_Value
+FROM vrinda_store
+GROUP BY Category
+ORDER BY Total_Revenue DESC;
+
+--b. Revenue by Channel
+
+SELECT 
+    Channel, 
+    SUM(Amount) AS Total_Revenue,
+    COUNT(*) AS Total_Orders,
+    ROUND(AVG(Amount), 2) AS Average_Order_Value
+FROM vrinda_store
+GROUP BY Channel
+ORDER BY Total_Revenue DESC;
+
+--c. Revenue by Gender (Customer Segment)
+
+SELECT 
+    Gender, 
+    SUM(Amount) AS Total_Revenue,
+    COUNT(*) AS Total_Orders,
+    ROUND(AVG(Amount), 2) AS Average_Order_Value
+FROM vrinda_store
+GROUP BY Gender
+ORDER BY Total_Revenue DESC;
+
+--3. Which product categories generate the highest revenue?
+
+SELECT 
+    Category, 
+    SUM(Amount) AS Total_Revenue
+FROM vrinda_store
+GROUP BY Category
+ORDER BY Total_Revenue DESC
+LIMIT 5;
+
+--4. How does sales performance vary by month or season?
+
+SELECT 
+    Channel, 
+    COUNT(*) AS Total_Orders,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM vrinda_store)), 2) AS Percentage_Orders
+FROM vrinda_store
+GROUP BY Channel
+ORDER BY Total_Orders DESC;
+
+--5. What are the most common sales channels?
+
+SELECT 
+    Channel, 
+    COUNT(*) AS Total_Orders,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM vrinda_store)), 2) AS Percentage_Orders
+FROM vrinda_store
+GROUP BY Channel
+ORDER BY Total_Orders DESC;
+
+--Order Fulfillment
+
+--1. What is the status of orders?
+
+SELECT 
+    Status,
+    COUNT(*) AS Total_Orders,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM vrinda_store)), 2) AS Percentage_Orders
+FROM vrinda_store
+GROUP BY Status
+ORDER BY Total_Orders DESC;
+
+--2. How efficient is shipping to different cities or states?
+
+--a. Analyze Shipping Performance by City:
+
+SELECT 
+    Ship_City,
+    COUNT(*) AS Total_Orders,
+    SUM(CASE WHEN Status = 'Delivered' THEN 1 ELSE 0 END) AS Delivered_Orders,
+    ROUND((SUM(CASE WHEN Status = 'Delivered' THEN 1 ELSE 0 END) * 100.0 / COUNT(*)), 2) AS Delivery_Rate
+FROM vrinda_store
+GROUP BY Ship_City
+ORDER BY Delivery_Rate DESC;
+
+--b. Analyze Shipping Performance by State:
+
+SELECT 
+    Ship_State,
+    COUNT(*) AS Total_Orders,
+    SUM(CASE WHEN Status = 'Delivered' THEN 1 ELSE 0 END) AS Delivered_Orders,
+    ROUND((SUM(CASE WHEN Status = 'Delivered' THEN 1 ELSE 0 END) * 100.0 / COUNT(*)), 2) AS Delivery_Rate
+FROM vrinda_store
+GROUP BY Ship_State
+ORDER BY Delivery_Rate DESC;
+
+--Product Insights 
+
+--1. What sizes are most frequently ordered?
+
+SELECT 
+    Size, 
+    COUNT(*) AS Total_Orders,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM vrinda_store)), 2) AS Percentage_Orders
+FROM vrinda_store
+GROUP BY Size
+ORDER BY Total_Orders DESC;
+
+--2. Which categories are most popular?
+
+SELECT 
+    Category, 
+    COUNT(*) AS Total_Orders,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM vrinda_store)), 2) AS Percentage_Orders
+FROM vrinda_store
+GROUP BY Category
+ORDER BY Total_Orders DESC;
+
+--B2B Analysis
+
+--1. What proportion of orders are B2B vs. non-B2B?
+
+SELECT 
+    B2B, 
+    COUNT(*) AS Total_Orders,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM vrinda_store)), 2) AS Percentage_Orders
+FROM vrinda_store
+GROUP BY B2B;
+
+--2. Which states or cities have the highest B2B sales?
+
+SELECT 
+    Ship_State,
+    COUNT(*) AS Total_B2B_Orders,
+    SUM(CASE WHEN B2B = TRUE THEN 1 ELSE 0 END) AS B2B_Sales,
+    ROUND((SUM(CASE WHEN B2B = TRUE THEN 1 ELSE 0 END) * 100.0 / COUNT(*)), 2) AS B2B_Percentage
+FROM vrinda_store
+GROUP BY Ship_State
+ORDER BY B2B_Sales DESC;
+
+--Promotional Campaigns
+
+--1. Which channels drive the most sales?
+
+SELECT 
+    Channel, 
+    SUM(Amount) AS Total_Revenue,
+    COUNT(*) AS Total_Orders,
+    ROUND(AVG(Amount), 2) AS Average_Order_Value
+FROM vrinda_store
+GROUP BY Channel
+ORDER BY Total_Revenue DESC;
+
+--2. Are there any spikes in sales linked to specific dates or events?
+
+SELECT 
+    Date, 
+    SUM(Amount) AS Daily_Revenue,
+    COUNT(*) AS Total_Orders
+FROM vrinda_store
+GROUP BY Date
+ORDER BY Daily_Revenue DESC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
